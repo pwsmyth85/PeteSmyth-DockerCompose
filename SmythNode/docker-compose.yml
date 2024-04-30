@@ -1,0 +1,51 @@
+version: "3.8"
+
+services: 
+  postgres:
+    image: postgres:16.2
+    restart: always
+    volumes: 
+      - ./volumes/volumez.sql:/docker-entrypoint-initdb.d/10_init.sql
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_MULTIPLE_DATABASES: docker, postgres
+      #POSTGRES_DB: docker
+      #PGDATA: /var/lib/postgresql/data/db-files/
+    ports:
+      - "5432:5432"
+    networks:
+      - pete-network
+
+  pgadmin:
+    container_name: pgadmin4
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 2316422@student.uwtsd.ac.uk
+      PGADMIN_DEFAULT_PASSWORD: docker
+    ports:
+      - "5050:80"
+    networks:
+      - pete-network
+
+  application:
+    container_name: node_web_app_v3.0
+    restart: unless-stopped
+    image: pete_web_db:3.0
+    build:
+      context: application
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    networks:
+      - pete-network
+    depends_on:
+      - postgres
+
+networks:
+  pete-network:
+    driver: bridge
+
+volumes:
+  volumes:

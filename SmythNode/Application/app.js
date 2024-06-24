@@ -11,7 +11,12 @@ require('dotenv').config();
 // Serve static files (CSS, images, etc.) from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// PostgreSQL database connection configuration
+//Bootstrap
+app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
+app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
+app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
+
+//PostgreSQL database connection configuration
 const pool = new Pool({
     user: 'docker',
     host: 'smythnode-postgres-1',
@@ -23,10 +28,10 @@ const pool = new Pool({
 // PostgreSQL database connection configuration
 //const pool = new Pool({
   //  user: process.env.PG_USER,
-   // host: process.env.POSTGRES_DB_HOST,
-   // database: process.env.PG_DATABASE,
-   // password: process.env.PG_PASSWORD,
-   // port: process.env.POSTGRES_DB_PORT
+    //host: process.env.POSTGRES_DB_HOST,
+    //database: process.env.PG_DATABASE,
+    //password: process.env.PG_PASSWORD,
+    //port: process.env.POSTGRES_DB_PORT
 //});
 
 
@@ -61,6 +66,13 @@ app.get('/signin', (req, res) => {
 app.get('/addevent', (req, res) => {
     console.log('Request received for register route.');
     const filePath = 'public/addevent.html';
+    console.log('Resolved file path:', filePath);
+    res.sendFile(filePath);
+});
+
+app.get('/boot', (req, res) => {
+    console.log('Request received for register route.');
+    const filePath = 'public/boot.html';
     console.log('Resolved file path:', filePath);
     res.sendFile(filePath);
 });
